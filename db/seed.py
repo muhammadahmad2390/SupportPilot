@@ -1,5 +1,3 @@
-import os
-from dotenv import load_dotenv
 from db.mock import orders, customers
 from db.schemas import Order, Customer
 from db.connection import db

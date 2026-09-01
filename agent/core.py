@@ -51,12 +51,3 @@ You have access to these tools: lookup_order_tool, check_refund_eligibility_tool
  context_schema=ConversationContext,
  state_schema=CustomAgentState
 )
-
-# result = agent.invoke(
-#     {'messages':[{'role':'user','content':"status of my order ord_003"}]},
-#     thread_config,
-#     context=ConversationContext(conversation_id=conversation_id),
-# )
-
-# for m in result['messages']:
-#     m.pretty_print()
