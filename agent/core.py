@@ -1,14 +1,19 @@
-from langchain.agents import create_agent
+from langchain.agents import create_agent, AgentState
 from langchain.chat_models import init_chat_model
-from agent_tools import lookup_order_tool, check_refund_eligibility_tool, escalate_to_human_tool,create_ticket_tool
+from agent.agent_tools import lookup_order_tool, check_refund_eligibility_tool, escalate_to_human_tool,create_ticket_tool
 from dotenv import load_dotenv
 from langgraph.checkpoint.memory import InMemorySaver
 from pydantic import BaseModel
-import uuid
+
+
 
 load_dotenv()
 
+class CustomAgentState(AgentState):
+    escalated: bool = False
+   
 
+   
 class ConversationContext(BaseModel):
    conversation_id: str
 
@@ -44,16 +49,14 @@ You have access to these tools: lookup_order_tool, check_refund_eligibility_tool
 
  checkpointer= InMemorySaver(),
  context_schema=ConversationContext,
+ state_schema=CustomAgentState
 )
 
-conversation_id = str(uuid.uuid4())
-thread_config = {'configurable': {"thread_id": conversation_id}}
+# result = agent.invoke(
+#     {'messages':[{'role':'user','content':"status of my order ord_003"}]},
+#     thread_config,
+#     context=ConversationContext(conversation_id=conversation_id),
+# )
 
-result = agent.invoke(
-    {'messages':[{'role':'user','content':"status of my order ord_003"}]},
-    thread_config,
-    context=ConversationContext(conversation_id=conversation_id),
-)
-
-for m in result['messages']:
-    m.pretty_print()
+# for m in result['messages']:
+#     m.pretty_print()

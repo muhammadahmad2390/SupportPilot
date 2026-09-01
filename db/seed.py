@@ -1,8 +1,8 @@
 import os
 from dotenv import load_dotenv
-from mock import orders, customers
-from schemas import Order, Customer
-from db import db
+from db.mock import orders, customers
+from db.schemas import Order, Customer
+from db.connection import db
 
 #validate both orders and customers list from pydantic model
 validated_orders = [Order(**o).model_dump() for o in orders]

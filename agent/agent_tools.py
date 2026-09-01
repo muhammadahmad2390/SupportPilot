@@ -1,5 +1,7 @@
 from langchain.tools import tool, ToolRuntime
-from tools import lookup_order, check_refund_eligibility, create_ticket, escalate_to_human
+from langchain.messages import ToolMessage
+from agent.tools import lookup_order, check_refund_eligibility, create_ticket, escalate_to_human
+from langgraph.types import Command
 
 @tool
 def lookup_order_tool(order_id: str) -> dict:
@@ -24,4 +26,12 @@ def create_ticket_tool(customer_id: str, issue: str, runtime:ToolRuntime) -> dic
 def escalate_to_human_tool(reason: str, runtime: ToolRuntime) -> dict:
      """Escalate the current conversation to a human agent, with a reason."""
      conversation_id = runtime.context.conversation_id
-     return escalate_to_human(reason, conversation_id)
+     result = escalate_to_human(reason, conversation_id)
+     return Command(
+          update={
+               'escalated':True,
+               'messages':[
+                 ToolMessage(content=str(result), tool_call_id = runtime.tool_call_id)
+               ]
+          } 
+     )
