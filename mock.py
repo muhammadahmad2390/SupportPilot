@@ -25,7 +25,7 @@ orders = [
     {"id": "ord_006", "customer_id": "cust_04", "items": ["Webcam"], "status": "pending", "total": 55, "created_at": "2026-08-20"},
     {"id": "ord_007", "customer_id": "cust_05", "items": ["Desk Lamp"], "status": "delivered", "total": 30, "created_at": "2026-03-05"},
     {"id": "ord_008", "customer_id": "cust_06", "items": ["Office Chair"], "status": "delivered", "total": 220, "created_at": "2026-06-25"},
-    {"id": "ord_009", "customer_id": "cust_06", "items": ["Mouse Pad"], "status": "delivered", "total": 12, "created_at": "2026-08-01"},
+    {"id": "ord_009", "customer_id": "cust_06", "items": ["Mouse Pad"], "status": "delivered", "total": 12, "created_at": "2026-08-12"},
     {"id": "ord_010", "customer_id": "cust_07", "items": ["External SSD"], "status": "pending", "total": 95, "created_at": "2026-08-22"},
     {"id": "ord_011", "customer_id": "cust_08", "items": ["Router"], "status": "delivered", "total": 70, "created_at": "2026-02-14"},
     {"id": "ord_012", "customer_id": "cust_09", "items": ["Graphics Tablet"], "status": "delivered", "total": 150, "created_at": "2026-07-30"},

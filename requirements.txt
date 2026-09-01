@@ -3,3 +3,9 @@ pydantic[email]
 dotenv
 pymongo
 langchain
+dotenv
+langchain-groq
+langgraph
+fastapi
+uvicorn
+
