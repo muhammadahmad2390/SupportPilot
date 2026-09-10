@@ -18,7 +18,9 @@ def chat(req: ChatRequest):
                                   thread_config,
                                   context = ConversationContext(conversation_id = req.conversation_id)
                                   )
-    escalated = agent_response.get('escalated')
+    # escalated = agent_response.get('escalated',False)
+    for m in agent_response['messages']:
+     print(m.pretty_print())
     last_message = agent_response['messages'][-1].content
     
-    return { 'reply': last_message, 'escalated': escalated }
+    return { 'reply': last_message }

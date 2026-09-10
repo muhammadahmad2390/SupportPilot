@@ -1,5 +1,7 @@
 from db.connection import db
 from datetime import datetime
+from agent.policy_sync import vectorStore
+from typing import List
 
 
 
@@ -51,4 +53,16 @@ def escalate_to_human(reason: str, conversation_id:str) -> dict:
    if result.matched_count == 0:
       return {"error":"No conversation found."}
    return {'escalated':True,"reason":reason}
+
+
+
+def search_policies(query: str ) -> List[str] | str:
+  result = vectorStore.similarity_search(query, k=3)
+  if len(result)==0:
+     return "Nothing relevant found"
+  
+  return "\n\n---\n\n".join(r.page_content for r in result)
+     
+  
+  
     

@@ -8,4 +8,7 @@ langchain-groq
 langgraph
 fastapi
 uvicorn
-
+langchain-text-splitters
+langchain-community
+langchain-chroma
+langchain-huggingface
