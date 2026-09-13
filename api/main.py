@@ -2,12 +2,22 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from agent.core import agent
 from agent.core import ConversationContext
+from agent.policy_sync import sync_policy, delete_policy
 
 
 class ChatRequest(BaseModel):
     conversation_id:str
     customer_id:str
     message:str
+
+class UpdatePolicyRequest(BaseModel):
+    policy_id: str
+    title: str
+    content: str
+class DeletePolicyRequest(BaseModel):
+    policy_id: str
+
+
 
 app = FastAPI()
 
@@ -24,3 +34,14 @@ def chat(req: ChatRequest):
     last_message = agent_response['messages'][-1].content
     
     return { 'reply': last_message }
+
+@app.post('/update_policy')
+def sync_policy_route(req: UpdatePolicyRequest)->dict:
+   sync_policy(req.policy_id,req.title,req.content)
+   return {'message': 'Policy updated successfully'}
+
+@app.post('/delete_policy')
+def delete_policy_route(req:DeletePolicyRequest)->dict:
+   delete_policy(req.policy_id)
+   return {'message': 'Policy deleted successfully'}
+  
