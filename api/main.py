@@ -35,12 +35,12 @@ def chat(req: ChatRequest):
     
     return { 'reply': last_message }
 
-@app.post('/update_policy')
+@app.put('/update_policy')
 def sync_policy_route(req: UpdatePolicyRequest)->dict:
    sync_policy(req.policy_id,req.title,req.content)
    return {'message': 'Policy updated successfully'}
 
-@app.post('/delete_policy')
+@app.delete('/delete_policy/{policy_id}')
 def delete_policy_route(req:DeletePolicyRequest)->dict:
    delete_policy(req.policy_id)
    return {'message': 'Policy deleted successfully'}

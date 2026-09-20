@@ -15,3 +15,10 @@ class Order(BaseModel):
      status:Literal["delivered","pending"]
      total:float
      created_at:str
+
+class Ticket(BaseModel):
+       conversation_id:str
+       customer_id:str
+       issue:str
+       status:Literal['open','resolved','escalated']
+       created_at:str

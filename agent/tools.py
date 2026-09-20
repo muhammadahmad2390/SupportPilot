@@ -2,6 +2,8 @@ from db.connection import db
 from datetime import datetime
 from agent.policy_sync import vectorStore
 from typing import List
+from db.schemas import Ticket
+from pydantic import ValidationError
 
 
 
@@ -32,16 +34,25 @@ def check_refund_eligibility(order_id:str)->dict:
 
 def create_ticket(customer_id: str, issue: str, conversation_id: str) -> dict:
    
-   ticket = {
-              "conversation_id":conversation_id,
-              "customer_id":customer_id,
-              "issue":issue,
-              "status":"open",
-              "created_at":datetime.now().isoformat()
-            }
-   result = db.tickets.insert_one(ticket)
-   ticket["_id"] = str(result.inserted_id)
-   return ticket
+    ticket = {
+        "conversation_id": conversation_id,
+        "customer_id": customer_id,
+        "issue": issue,
+        "status": "open",
+        "created_at": datetime.now().isoformat()
+    }
+    try:
+        validated_ticket = Ticket(**ticket).model_dump()
+    except ValidationError as e:
+        return {"error": f"Failed to create ticket: invalid data ({e})"}
+
+    try:
+        result = db.tickets.insert_one(validated_ticket)
+    except Exception as e:
+        return {"error": f"Failed to save ticket: {e}"}
+
+    validated_ticket["_id"] = str(result.inserted_id)
+    return validated_ticket
 
 
 
