@@ -17,10 +17,10 @@ def check_refund_eligibility_tool(order_id: str) -> dict:
 
 
 @tool
-def create_ticket_tool(customer_id: str, issue: str, runtime:ToolRuntime) -> dict:
-     """Create a support ticket for a customer issue that needs follow-up."""
+def create_ticket_tool(customer_id: str, issue: str, aiSummary:str, runtime:ToolRuntime) -> dict:
+     """Create a support ticket for a customer issue that needs follow-up with AI summary in the ticket."""
      conversation_id = runtime.context.conversation_id
-     return create_ticket(customer_id, issue, conversation_id)
+     return create_ticket(customer_id, issue, aiSummary, conversation_id)
 
 @tool
 def search_policies_tool(query: str):

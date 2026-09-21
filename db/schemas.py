@@ -19,6 +19,7 @@ class Order(BaseModel):
 class Ticket(BaseModel):
        conversation_id:str
        customer_id:str
+       aiSummary:str
        issue:str
        status:Literal['open','resolved','escalated']
        created_at:str

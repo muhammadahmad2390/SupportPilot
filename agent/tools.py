@@ -32,11 +32,12 @@ def check_refund_eligibility(order_id:str)->dict:
 
 
 
-def create_ticket(customer_id: str, issue: str, conversation_id: str) -> dict:
+def create_ticket(customer_id: str, issue: str, aiSummary:str , conversation_id: str) -> dict:
    
     ticket = {
         "conversation_id": conversation_id,
         "customer_id": customer_id,
+        "aiSummary":aiSummary,
         "issue": issue,
         "status": "open",
         "created_at": datetime.now().isoformat()
