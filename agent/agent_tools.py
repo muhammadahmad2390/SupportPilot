@@ -1,6 +1,6 @@
 from langchain.tools import tool, ToolRuntime
 from langchain.messages import ToolMessage
-from agent.tools import lookup_order, check_refund_eligibility, create_ticket,search_policies
+from agent.tools import lookup_order, list_customer_orders, check_refund_eligibility, create_ticket,search_policies
 from langgraph.types import Command
 from typing import List
 
@@ -8,6 +8,12 @@ from typing import List
 def lookup_order_tool(order_id: str) -> dict:
      """Look up an order's status, items, and total by its order ID."""
      return lookup_order(order_id)
+
+
+@tool
+def list_customer_orders_tool(runtime: ToolRuntime) -> list[dict]:
+     """List all orders belonging to the current customer."""
+     return list_customer_orders(runtime.context.customer_id)
 
 
 @tool

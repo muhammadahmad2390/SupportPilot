@@ -11,11 +11,13 @@ class ChatRequest(BaseModel):
     message:str
 
 class UpdatePolicyRequest(BaseModel):
+    title: str
+    content: str
+
+class CreatePolicyRequest(BaseModel):
     policy_id: str
     title: str
     content: str
-class DeletePolicyRequest(BaseModel):
-    policy_id: str
 
 
 
@@ -26,7 +28,10 @@ def chat(req: ChatRequest):
     thread_config = {'configurable': {"thread_id": req.conversation_id}}
     agent_response = agent.invoke({'messages':[{'role':'user','content': req.message}]},
                                   thread_config,
-                                  context = ConversationContext(conversation_id = req.conversation_id)
+                                  context = ConversationContext(
+                                      conversation_id=req.conversation_id,
+                                      customer_id=req.customer_id,
+                                  )
                                   )
     # escalated = agent_response.get('escalated',False)
     for m in agent_response['messages']:
@@ -35,13 +40,18 @@ def chat(req: ChatRequest):
     
     return { 'reply': last_message }
 
-@app.put('/update_policy')
-def sync_policy_route(req: UpdatePolicyRequest)->dict:
+@app.post('/')
+def create_policy_route(req: CreatePolicyRequest)->dict:
    sync_policy(req.policy_id,req.title,req.content)
+   return {'message': 'Policy created successfully'}
+
+@app.put('/{policy_id}')
+def sync_policy_route(policy_id:str, req: UpdatePolicyRequest)->dict:
+   sync_policy(policy_id, req.title, req.content)
    return {'message': 'Policy updated successfully'}
 
-@app.delete('/delete_policy/{policy_id}')
-def delete_policy_route(req:DeletePolicyRequest)->dict:
-   delete_policy(req.policy_id)
+@app.delete('/{policy_id}')
+def delete_policy_route(policy_id:str)->dict:
+   delete_policy(policy_id)
    return {'message': 'Policy deleted successfully'}
   

@@ -1,6 +1,6 @@
 from langchain.agents import create_agent, AgentState
 from langchain.chat_models import init_chat_model
-from agent.agent_tools import lookup_order_tool, check_refund_eligibility_tool,create_ticket_tool,search_policies_tool
+from agent.agent_tools import lookup_order_tool, list_customer_orders_tool, check_refund_eligibility_tool,create_ticket_tool,search_policies_tool
 from dotenv import load_dotenv
 from langgraph.checkpoint.memory import InMemorySaver
 from pydantic import BaseModel
@@ -11,11 +11,11 @@ load_dotenv()
 
 class CustomAgentState(AgentState):
     escalated: bool = False
-   
 
    
 class ConversationContext(BaseModel):
    conversation_id: str
+   customer_id: str
 
 
 llm = init_chat_model(
@@ -26,7 +26,7 @@ llm = init_chat_model(
 
 agent = create_agent(
     model=llm,
-    tools=[lookup_order_tool, check_refund_eligibility_tool, create_ticket_tool, search_policies_tool],
+    tools=[lookup_order_tool, list_customer_orders_tool, check_refund_eligibility_tool, create_ticket_tool, search_policies_tool],
     system_prompt="""You are a customer support agent for an online store. Help customers with order status, refund eligibility, policy questions, and general issues accurately and without guessing.
 
 RULES:
@@ -42,6 +42,8 @@ RULES:
 
 6. If the customer explicitly asks to speak to a human agent, or their issue cannot be resolved with your available tools, call create_ticket_tool and inform them a support agent will follow up shortly.
 
+6a. If the customer asks to see, list, or show all of their orders, call list_customer_orders_tool. Do not call lookup_order_tool repeatedly or guess the order history.
+
 7. When creating a ticket:
    - If you have already looked up the order, use the customer_id from that result — never ask the customer for it.
    - If no order has been looked up yet, call lookup_order_tool first to get the customer_id, then create_ticket_tool.
@@ -55,7 +57,9 @@ RULES:
 
 10. Never ask the customer for their customer_id — always get it from lookup_order_tool.
 
-You have access to: lookup_order_tool, check_refund_eligibility_tool, create_ticket_tool, search_policies_tool.
+11. Never reveal the customer_id to the customer even if directly asked — it is an internal identifier only. Tell them customer IDs are internal and not shared.
+
+You have access to: lookup_order_tool, list_customer_orders_tool, check_refund_eligibility_tool, create_ticket_tool, search_policies_tool.
 """,
     checkpointer=InMemorySaver(),
     context_schema=ConversationContext,

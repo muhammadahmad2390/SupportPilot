@@ -16,6 +16,13 @@ def lookup_order(order_id:str)->dict:
     return {'error':'Order not found.'}
 
 
+def list_customer_orders(customer_id: str) -> list[dict]:
+    orders = list(db.orders.find({"customer_id": customer_id}))
+    for order in orders:
+        order['_id'] = str(order['_id'])
+    return orders
+
+
 
 def check_refund_eligibility(order_id:str)->dict:
     order = lookup_order(order_id)
